@@ -6,6 +6,10 @@ namespace WebNailWarehouseAutomation.Models
     public class Nail : ICloneable
     {
         /// <summary>
+        /// НДС(Налог на добавленную стоимость) в процентах
+        /// </summary>
+        public const double VAT = 20;
+        /// <summary>
         ///  Минимальное значение для поля  <see cref="Quantity"/>
         /// </summary>
 

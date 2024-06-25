@@ -7,6 +7,46 @@
 }
 
 <h1>Список гвоздей на складе</h1>
+
+<table class="table table-dark table-striped">
+    @{
+        int totalNumberOfNails = 0;
+        int count = 0;
+        double AVGPrice = 0.0;
+        double totalCostIncludingVAT = 0.0;
+        double TotalCostWithVAT = 0.0;
+        foreach (var nail in Model)
+        {
+            count++;
+            totalNumberOfNails += nail.Quantity;
+            AVGPrice += nail.PriceExcludingVAT;
+            totalCostIncludingVAT += nail.PriceExcludingVAT * nail.Quantity;
+            TotalCostWithVAT += nail.PriceIncludingVAT(Nail.VAT) * nail.Quantity;
+        }
+        if (count > 0)
+        {
+            AVGPrice /= count;
+        }
+        var TotalNumberOfNailsString = $"Общее количество гвоздей на складе: {totalNumberOfNails} шт.";
+        var TotalCostIncludingVATOfGoodsString = $"Общая стоимость без НДС: {totalCostIncludingVAT:C2} руб.";
+        var NumberOfProductLinesString = $"Количество товарных позиций: {count}";
+        var TotalCostWithVATString = $"Общая стоимость с НДС: {TotalCostWithVAT:C2}";
+        <tr>
+            <th>
+                @TotalNumberOfNailsString
+            </th>
+            <th>
+                @TotalCostIncludingVATOfGoodsString
+            </th>
+            <th>
+                @NumberOfProductLinesString
+            </th>
+            <th>
+                @TotalCostWithVATString
+            </th>
+        </tr>
+    }
+</table>
 <a type="button" asp-action="Create" class="btn btn-success">Добавить гвозди</a>
 <table class="table table-dark table-striped">
     @{
@@ -28,29 +68,32 @@
             <th>Удалить объект</th>
         </tr>
     }
-    @foreach (var item in Model)
+    @foreach (var nail in Model)
     {
         <tr>
-            <td>@item.Name</td>
-            <td>@item.Diameter</td>
-            <td>@item.Length</td>
-            <td>@item.Material.DisplayName()</td>
-            <td>@item.Quantity</td>
-            <td>@item.PriceExcludingVAT.ToString("c")</td>
+            <td>@nail.Name</td>
+            <td>@nail.Diameter</td>
+            <td>@nail.Length</td>
+            <td>@nail.Material.DisplayName()</td>
+            <td>@nail.Quantity</td>
+            <td>@nail.PriceExcludingVAT.ToString("c")</td>
             <td>
                 <a asp-action="Edit"
                     asp-asp-controller="Home"
                     type="button" class="btn btn-warning"
-                    asp-route-id="@item.id">Изменить</a>
+                    asp-route-id="@nail.id">Изменить</a>
             </td>
             <td>
                 <form asp-controller="Home"
                         asp-action="Delete"
                         method="post"
-                        asp-route-id="@item.id">
+                        asp-route-id="@nail.id">
                     <input type="submit" class="btn btn-danger" value="Удалить" />
                 </form>
             </td>
         </tr>
+
     }
 </table>
+@*
+ *@
