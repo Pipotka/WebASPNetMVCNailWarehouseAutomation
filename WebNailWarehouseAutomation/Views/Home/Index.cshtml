@@ -1,0 +1,56 @@
+﻿@model IEnumerable<WebNailWarehouseAutomation.Models.Nail>
+@using WebNailWarehouseAutomation.Helpers;
+@using System.Reflection;
+@using System.ComponentModel.DataAnnotations;
+@{
+    ViewData["Title"] = "Warehouse condition";
+}
+
+<h1>Список гвоздей на складе</h1>
+<a type="button" asp-action="Create" class="btn btn-success">Добавить гвозди</a>
+<table class="table table-dark table-striped">
+    @{
+        Type soursType = typeof(Nail);
+        int numberOfColumns = 0;
+        foreach (PropertyInfo property in soursType.GetProperties())
+        {
+            numberOfColumns++;
+        }
+        <tr>
+            @foreach (PropertyInfo property in soursType.GetProperties())
+            {
+                @foreach (DisplayAttribute attr in property.GetCustomAttributes(typeof(DisplayAttribute)))
+                {
+                    <th>@attr.GetName()</th>
+                }
+            }
+            <th>Изменить объект</th>
+            <th>Удалить объект</th>
+        </tr>
+    }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Diameter</td>
+            <td>@item.Length</td>
+            <td>@item.Material.DisplayName()</td>
+            <td>@item.Quantity</td>
+            <td>@item.PriceExcludingVAT.ToString("c")</td>
+            <td>
+                <a asp-action="Edit"
+                    asp-asp-controller="Home"
+                    type="button" class="btn btn-warning"
+                    asp-route-id="@item.id">Изменить</a>
+            </td>
+            <td>
+                <form asp-controller="Home"
+                        asp-action="Delete"
+                        method="post"
+                        asp-route-id="@item.id">
+                    <input type="submit" class="btn btn-danger" value="Удалить" />
+                </form>
+            </td>
+        </tr>
+    }
+</table>
